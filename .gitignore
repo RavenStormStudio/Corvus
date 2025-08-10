@@ -1,0 +1,9 @@
+.vscode
+.idea
+
+.xmake
+
+Binaries/
+Intermediates/
+Build/vsxmake2022
+Build/.deps
