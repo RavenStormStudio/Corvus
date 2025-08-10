@@ -1,0 +1,10 @@
+target('CorvusTestSuit')
+  set_group('Tests')
+  set_kind('static')
+
+  add_files('./Private/**.cpp')
+  add_headerfiles('./Public/**.hpp')
+  add_includedirs('./Private')
+  add_includedirs('./Public', { public = true })
+  add_packages('catch2')
+target_end()
