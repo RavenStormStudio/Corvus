@@ -1,5 +1,10 @@
 set_xmakever('3.0.1')
 
+-- Dependencies
+add_requires('catch2 3.9.0')
+
+-- Project Setup
+
 set_project('Corvus')
 set_version('0.0.1', {build = '%Y%m%d%H%M'})
 
@@ -40,10 +45,11 @@ set_objectdir('./Intermediates/Engine/$(plat)-$(arch)/$(mode)')
 
 set_warnings('error')
 set_exceptions('none')
-add_cxflags('/EHsc', '/MP', {force = true})
+add_cxflags('/EHsc', '/MP', '/Gm-', '/INCREMENTAL:NO', {force = true})
 
 function corvus_engine_target(name)
   target(name)
+    set_group('Engine')
     if is_mode('debug') then
       set_kind('shared')
     elseif is_mode('development') then
@@ -63,6 +69,7 @@ end
 
 function corvus_launch_target(name)
   target(name)
+    set_group('Engine')
     set_kind('binary')
     set_default(true)
 
@@ -71,8 +78,25 @@ function corvus_launch_target(name)
     add_includedirs('./Private', './Public')
 end
 
+function corvus_test_target(target_name) 
+  target(target_name .. 'Tests')
+    set_group('Tests')
+    set_kind('binary')
+
+    add_files('./Tests/**.cpp')
+    add_deps(target_name, 'CorvusTestSuit')
+    add_packages('catch2')
+end
+
 function corvus_target_end()
   target_end()
 end
+
+target('BuildFiles')
+  set_group('Tools')
+  set_kind('phony')
+  add_extrafiles('xmake.lua')
+  add_extrafiles('**/xmake.lua')
+target_end()
 
 includes('**/xmake.lua')
