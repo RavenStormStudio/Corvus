@@ -44,13 +44,3 @@ public:
 
 private:
 };
-
-// ReSharper disable CppClangTidyReadabilityRedundantDeclaration
-
-void* operator new(size64 Size);
-void* operator new[](size64 Size);
-
-void operator delete(void* Pointer) noexcept;
-void operator delete[](void* Pointer) noexcept;
-
-// ReSharper enable CppClangTidyReadabilityRedundantDeclaration
