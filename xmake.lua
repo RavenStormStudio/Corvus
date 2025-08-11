@@ -45,7 +45,20 @@ set_objectdir('./Intermediates/Engine/$(plat)-$(arch)/$(mode)')
 
 set_warnings('error')
 set_exceptions('none')
-add_cxflags('/EHsc', '/MP', '/Gm-', '/INCREMENTAL:NO', {force = true})
+add_cxflags('/EHsc', {force = true})
+add_defines('WIN32_LEAN_AND_MEAN', 'NOMINMAX', 'WIN32_DEFAULT_LIBS')
+
+-- Custom Rules
+
+rule('windows.default')
+  after_load(function (target)
+    target:add('syslinks', 'kernel32', 'user32', 'gdi32', 'winspool', 'comdlg32', 'advapi32')
+    target:add('syslinks', 'shell32', 'ole32', 'oleaut32', 'uuid', 'odbc32', 'odbccp32', 'comctl32')
+    target:add('syslinks', 'comdlg32', 'setupapi', 'shlwapi')
+    if not target:is_plat('mingw') then
+      target:add('syslinks', 'strsafe')
+    end
+  end)
 
 function corvus_engine_target(name)
   target(name)
@@ -58,6 +71,7 @@ function corvus_engine_target(name)
       set_kind('static')
     end
 
+    add_rules('windows.default')
     add_files('./Private/**.cpp')
     add_headerfiles('./Public/**.hpp')
     add_includedirs('./Private')
@@ -73,6 +87,15 @@ function corvus_launch_target(name)
     set_kind('binary')
     set_default(true)
 
+    if is_mode('debug') then
+      add_ldflags('/SUBSYSTEM:CONSOLE', { force = true })
+    elseif is_mode('development') then
+      add_ldflags('/SUBSYSTEM:CONSOLE', { force = true })
+    elseif is_mode('shipping') then
+      add_ldflags('/SUBSYSTEM:WINDOWS', { force = true })
+    end
+
+    add_rules('windows.default')
     add_files('./Private/**.cpp')
     add_headerfiles('./Public/**.hpp')
     add_includedirs('./Private', './Public')
@@ -83,6 +106,9 @@ function corvus_test_target(target_name)
     set_group('Tests')
     set_kind('binary')
 
+    add_ldflags('/SUBSYSTEM:CONSOLE', { force = true })
+
+    add_rules('windows.default')
     add_files('./Tests/**.cpp')
     add_deps(target_name, 'CorvusTestSuit')
     add_packages('catch2')
