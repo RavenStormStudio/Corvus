@@ -4,6 +4,16 @@
 
 TUnorderedMap<uint64, FString> FNameStringPool::StringPool;
 
+void InitializeEmptyString()
+{
+    static bool bInitialized = false;
+    if (!bInitialized)
+    {
+        FNameStringPool::Register(0, FString());
+        bInitialized = true;
+    }
+}
+
 bool8 FNameStringPool::IsRegistered(const uint64 Hash)
 {
     return StringPool.contains(Hash);
@@ -20,9 +30,10 @@ void FNameStringPool::Register(uint64 Hash, const FString& String)
 
 const FString& FNameStringPool::GetString(const uint64 Hash)
 {
+    InitializeEmptyString();
     if (!IsRegistered(Hash))
     {
-        return EmptyString;
+        return StringPool.at(0); // Return the empty string registered at hash 0
     }
     return StringPool.at(Hash);
 }
@@ -58,7 +69,8 @@ FStringView FName::GetStringView() const
     return FNameStringPool::GetStringView(Hash);
 }
 
-FName::operator uint64() const
+// ReSharper disable once CppMemberFunctionMayBeConst
+FName::operator uint64()
 {
     return Hash;
 }
