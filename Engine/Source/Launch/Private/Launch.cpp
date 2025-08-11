@@ -1,9 +1,22 @@
+#include "Engine/Core/Crash/CrashHandler.hpp"
 #include "Engine/Engine/Engine.hpp"
 
-int main()
+void GuardedMain()
 {
     GetEngine()->Initialize();
     GetEngine()->Shutdown();
     FEngine::DestroyInstance();
-    return 0;
+}
+
+int main()
+{
+    FCrashHandler::Setup();
+    TRY
+    {
+        GuardedMain();
+    }
+    CATCH()
+    {
+    }
+    return FCrashHandler::GetExitCode();
 }
