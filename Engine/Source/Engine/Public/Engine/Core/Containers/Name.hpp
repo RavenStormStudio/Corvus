@@ -15,8 +15,6 @@ public:
     [[nodiscard]] static const FString& GetString(uint64 Hash);
     [[nodiscard]] static FStringView GetStringView(uint64 Hash);
 
-private:
-    constexpr static FString EmptyString;
 
 private:
     static TUnorderedMap<uint64, FString> StringPool;
@@ -41,7 +39,7 @@ public:
     [[nodiscard]] uint64 GetHash() const { return Hash; }
 
 public:
-    operator uint64() const;
+    operator uint64();
     operator const uint64() const;
 
 private:
