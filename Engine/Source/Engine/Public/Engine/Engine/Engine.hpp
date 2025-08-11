@@ -6,6 +6,8 @@
 
 #include <type_traits>
 
+using IEngineSubsystem = ISubsystem;
+
 class ENGINE_API FEngine : public TSingleton<FEngine>
 {
 public:
@@ -19,37 +21,10 @@ public:
     void Shutdown();
 
 public:
-    [[nodiscard]] bool8 IsSubsystemRegistered(FName Name) const;
-    [[nodiscard]] ISubsystem* GetSubsystem(FName Name) const;
-    bool8 RegisterSubsystem(FName Name, ISubsystem* Subsystem) const;
-    bool8 UnregisterSubsystem(FName Name) const;
-
-    template <typename T>
-    [[nodiscard]] bool8 IsSubsystemRegistered() const
-    {
-        return SubsystemCollection->IsRegistered<T>();
-    }
-
-    template <typename T>
-    [[nodiscard]] T* GetSubsystem()
-    {
-        return SubsystemCollection->GetSubsystem<T>();
-    }
-
-    template <typename T, typename... TArguments>
-    bool8 RegisterSubsystem(TArguments&&... Arguments)
-    {
-        return SubsystemCollection->Register<T, TArguments...>(std::forward<TArguments>(Arguments)...);
-    }
-
-    template <typename T>
-    bool8 UnregisterSubsystem() const
-    {
-        return SubsystemCollection->Unregister<T>();
-    }
+    DEFINE_SUBSYSTEM_FUNCTIONS(IEngineSubsystem, SubsystemCollection)
 
 private:
-    TUniquePtr<FSubsystemCollection> SubsystemCollection;
+    TUniquePtr<FSubsystemCollection<IEngineSubsystem>> SubsystemCollection;
 };
 
 [[nodiscard]] ENGINE_API TSharedPtr<FEngine> GetEngine();
