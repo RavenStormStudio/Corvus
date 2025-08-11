@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <format>
+#include <sstream>
 #include <string>
 #include <Windows.h>
 
@@ -9,6 +10,7 @@
 using FChar = char;
 using FString = std::string;
 using FStringView = std::string_view;
+using FStringStream = std::stringstream;
 
 template <typename... TArguments>
 using TFormatString = std::format_string<TArguments...>;
@@ -16,6 +18,7 @@ using TFormatString = std::format_string<TArguments...>;
 using FWideChar = wchar_t;
 using FWideString = std::wstring;
 using FWideStringView = std::wstring_view;
+using FWideStringStream = std::wstringstream;
 
 template <typename... TArguments>
 using TWideFormatString = std::wformat_string<TArguments...>;
