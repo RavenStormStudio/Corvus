@@ -47,7 +47,7 @@ set_objectdir('./Intermediates/Engine/$(plat)-$(arch)/$(mode)')
 
 set_warnings('error')
 set_exceptions('none')
-add_cxflags('/EHsc', {force = true})
+add_cxflags('/EHsc', '/Zc:preprocessor', '/wd5103', {force = true})
 add_defines('WIN32_LEAN_AND_MEAN', 'NOMINMAX', 'WIN32_DEFAULT_LIBS')
 
 -- Custom Rules
