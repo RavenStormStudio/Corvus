@@ -10,6 +10,10 @@
 #include <ranges>
 #include <type_traits>
 
+#include "Engine/Core/Logging/Logger.hpp"
+
+ENGINE_API DEFINE_LOG_CHANNEL(Subsystem, All)
+
 template <typename T> requires std::is_base_of_v<ISubsystem, T>
 class ENGINE_API FSubsystemCollection
 {
@@ -41,6 +45,7 @@ public:
     {
         if (!IsRegistered(Name))
         {
+            CVLOG(LogSubsystem, Warn, "Unable to get subsystem. Subsystem '{}' is not registered", Name.GetString());
             return nullptr;
         }
         return Subsystems.at(Name);
@@ -50,6 +55,7 @@ public:
     {
         if (IsRegistered(Name))
         {
+            CVLOG(LogSubsystem, Warn, "Unable to register subsystem. Subsystem '{}' is already registered", Name.GetString());
             return false;
         }
         Subsystems.emplace(Name, Subsystem);
@@ -61,6 +67,7 @@ public:
     {
         if (!IsRegistered(Name))
         {
+            CVLOG(LogSubsystem, Warn, "Unable to unregister subsystem. Subsystem '{}' is not registered", Name.GetString());
             return false;
         }
         T* Subsystem = GetSubsystem(Name);
