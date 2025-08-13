@@ -2,6 +2,7 @@ local target_name = 'Engine'
 
 corvus_engine_target(target_name)
 
+  add_packages('spdlog', { public = true })
 corvus_target_end()
 
 -- Tests

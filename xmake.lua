@@ -2,6 +2,7 @@ set_xmakever('3.0.1')
 
 -- Dependencies
 add_requires('catch2 3.9.0')
+add_requires('spdlog 1.15.3', { configs = { std_format = true } })
 
 -- Project Setup
 
