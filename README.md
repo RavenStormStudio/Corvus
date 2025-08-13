@@ -11,7 +11,7 @@ Corvus Engine is a modern game engine featuring Data-Oriented Design (DOD) archi
 ### Prerequisites
 
 - Windows 10/11 (x64)
-- Visual Studio 2022
+- Visual Studio 2022 or Jetbrains Rider
 - [XMake v3.0.1+](https://github.com/xmake-io/xmake/releases/tag/v3.0.1)
 
 ### Workspace Setup
