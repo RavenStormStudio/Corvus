@@ -1,6 +1,8 @@
 #include "Engine/Core/Crash/CrashHandler.hpp"
+#include "Engine/Core/Logging/Logger.hpp"
 #include "Engine/Engine/Engine.hpp"
 
+#include <Windows.h>
 void GuardedMain()
 {
     GetEngine()->Initialize();
@@ -8,8 +10,13 @@ void GuardedMain()
     FEngine::DestroyInstance();
 }
 
+#ifdef CORVUS_MODE_SHIPPING
+int APIENTRY WinMain(HINSTANCE InstanceHandle, HINSTANCE PreviousInstanceHandle, PSTR CommandLine, int ShowCmd)
+#else
 int main()
+#endif
 {
+    FLogger::Setup();
     FCrashHandler::Setup();
     TRY
     {
@@ -18,5 +25,7 @@ int main()
     CATCH()
     {
     }
-    return FCrashHandler::GetExitCode();
+    const int32 ExitCode = FCrashHandler::GetExitCode();
+    FLogger::Destroy();
+    return ExitCode;
 }
