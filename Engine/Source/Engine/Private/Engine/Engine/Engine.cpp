@@ -1,5 +1,7 @@
 ﻿#include "Engine/Engine/Engine.hpp"
 
+DECLARE_LOG_CHANNEL(Subsystem, All)
+
 void FEngine::Initialize()
 {
     SubsystemCollection = MakeUnique<FSubsystemCollection<IEngineSubsystem>>();

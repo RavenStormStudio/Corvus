@@ -12,7 +12,7 @@
 
 #include "Engine/Core/Logging/Logger.hpp"
 
-ENGINE_API DEFINE_LOG_CHANNEL(Subsystem, All)
+ENGINE_API DEFINE_LOG_CHANNEL_EXTERN(Subsystem)
 
 template <typename T> requires std::is_base_of_v<ISubsystem, T>
 class ENGINE_API FSubsystemCollection
