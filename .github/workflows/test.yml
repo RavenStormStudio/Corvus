@@ -25,7 +25,7 @@ jobs:
         with:
           xmake-version: 3.0.1
           package-cache: true
-          package-cache-key: "xmake-windows-ci-package-cache"
+          package-cache-key: "${{ matrix.config }}-${{ matrix.arch }}-cache"
           project-path: "."
       - name: Configure xmake
         run: |
