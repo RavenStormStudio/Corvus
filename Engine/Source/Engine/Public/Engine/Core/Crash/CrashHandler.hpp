@@ -6,6 +6,9 @@
 
 #include "Engine/Core/CoreTypes.hpp"
 #include "Engine/Core/Logging/Logger.hpp"
+#include "Engine/Core/Utility/SourceLocation.hpp"
+
+#define EXCEPTION_ASSERTION MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 1)
 
 ENGINE_API DEFINE_LOG_CHANNEL_EXTERN(CrashHandler)
 
