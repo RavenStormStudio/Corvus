@@ -28,7 +28,7 @@ jobs:
           actions-cache-key: "xmake-windows-ci-cache"
           package-cache: true
           package-cache-key: "xmake-windows-ci-package-cache"
-          project-path: "Corvus"
+          project-path: "."
       - name: Configure xmake
         run: |
           xmake f -p windows -a ${{ matrix.arch }} -m ${{ matrix.config }} --yes
