@@ -24,6 +24,7 @@ class ENGINE_API FName
 public:
     FName();
     FName(const FStringView& InStringView);
+    FName(const FChar* InString);
     ~FName() = default;
 
     DEFAULT_COPY_MOVEABLE(FName)

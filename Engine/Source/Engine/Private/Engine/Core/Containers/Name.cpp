@@ -58,6 +58,13 @@ FName::FName(const FStringView& InStringView)
     FNameStringPool::Register(Hash, FString(InStringView));
 }
 
+FName::FName(const FChar* InString)
+{
+    const FString String = InString;
+    Hash = HashUtility::FNV1A::Hash(String.data(), String.length());
+    FNameStringPool::Register(Hash, String);
+}
+
 bool8 FName::IsValid() const
 {
     return Hash != 0;
