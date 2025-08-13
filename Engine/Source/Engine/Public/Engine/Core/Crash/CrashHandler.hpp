@@ -5,6 +5,9 @@
 #include <Windows.h>
 
 #include "Engine/Core/CoreTypes.hpp"
+#include "Engine/Core/Logging/Logger.hpp"
+
+ENGINE_API DEFINE_LOG_CHANNEL_EXTERN(CrashHandler)
 
 class ENGINE_API FCrashHandler
 {
