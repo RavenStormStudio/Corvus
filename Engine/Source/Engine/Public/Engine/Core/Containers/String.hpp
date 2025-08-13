@@ -60,4 +60,16 @@ namespace String
         WideCharToMultiByte(CP_UTF8, 0, String.c_str(), static_cast<int>(String.size()), Result.data(), Size, nullptr, nullptr);
         return Result;
     }
+
+    template <typename T>
+    FString ToString(T Value)
+    {
+        return std::to_string(Value);
+    }
+
+    template <typename T>
+    FWideString ToWideString(T Value)
+    {
+        return std::to_wstring(Value);
+    }
 }
