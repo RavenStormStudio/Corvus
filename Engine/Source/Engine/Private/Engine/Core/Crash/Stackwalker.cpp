@@ -18,11 +18,11 @@ struct FDbgHelpFunctions
     decltype(&::SymGetModuleInfo64) SymGetModuleInfo64 = nullptr;
     decltype(&::UnDecorateSymbolName) UnDecorateSymbolName = nullptr;
 
-    void Load()
+    bool8 Load()
     {
         if (DbgHelpModule)
         {
-            return;
+            return true;
         }
 
         WCHAR SystemPath[MAX_PATH];
@@ -37,7 +37,7 @@ struct FDbgHelpFunctions
         }
         if (!DbgHelpModule)
         {
-            return;
+            return false;
         }
 
         bool bSuccess = true;
@@ -56,7 +56,9 @@ struct FDbgHelpFunctions
         {
             FreeLibrary(DbgHelpModule);
             DbgHelpModule = nullptr;
+            return false;
         }
+        return true;
     }
 
     void Unload()
@@ -155,7 +157,10 @@ FString FStackWalker::FormatStackTrace(const TVector<FStackFrame>& Frames)
 
 bool8 FStackWalker::InitializeSymbols() const
 {
-    FDbgHelpFunctions::GetInstance().Load();
+    if (!FDbgHelpFunctions::GetInstance().Load())
+    {
+        return false;
+    }
 
     DWORD SymOptions = SYMOPT_DEFERRED_LOADS | SYMOPT_FAIL_CRITICAL_ERRORS;
     if (Config.bUndecorateSymbols)
