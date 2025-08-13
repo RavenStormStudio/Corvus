@@ -24,7 +24,7 @@ jobs:
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: 3.0.1
-          actions-cache-folder: ".xmake"
+          actions-cache-folder: ".xmake-cache"
           actions-cache-key: "xmake-windows-ci-cache"
           package-cache: true
           package-cache-key: "xmake-windows-ci-package-cache"
