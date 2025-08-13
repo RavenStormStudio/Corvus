@@ -15,9 +15,8 @@ public:
     [[nodiscard]] static const FString& GetString(uint64 Hash);
     [[nodiscard]] static FStringView GetStringView(uint64 Hash);
 
-
 private:
-    static TUnorderedMap<uint64, FString> StringPool;
+    [[nodiscard]] static TUnorderedMap<uint64, FString>& GetStringPool();
 };
 
 class ENGINE_API FName
