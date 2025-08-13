@@ -4,6 +4,8 @@
 
 #include "Engine/Core/Crash/Stackwalker.hpp"
 
+DECLARE_LOG_CHANNEL(CrashHandler, Error)
+
 int32 FCrashHandler::ExitCode = EXIT_SUCCESS;
 
 void FCrashHandler::Setup()
@@ -19,6 +21,13 @@ LONG FCrashHandler::Handler(EXCEPTION_POINTERS* ExceptionPointers)
 
     const FStackWalker StackWalker;
     const TVector<FStackFrame> StackFrames = StackWalker.CaptureStack();
+
+    CVLOG(LogCrashHandler, Critical, "Stack Trace:");
+    for (size64 Index = 0; Index < StackFrames.size(); ++Index)
+    {
+        CVLOG(LogCrashHandler, Critical, "\t[{}] {}", Index, StackFrames[Index].ToString());
+    }
+
     MessageBoxA(nullptr, FStackWalker::FormatStackTrace(StackFrames).c_str(), TEXT("Corvus"), MB_ICONERROR | MB_OK);
     return EXCEPTION_EXECUTE_HANDLER;
 }
