@@ -6,7 +6,8 @@ add_requires('spdlog 1.15.3', { configs = { std_format = true } })
 
 -- Project Setup
 
-set_project('Corvus')
+project_name = 'Corvus'
+set_project(project_name)
 set_version('0.0.1', {build = '%Y%m%d%H%M'})
 
 set_allowedplats('windows')
@@ -33,7 +34,7 @@ elseif is_mode('development') then
   add_defines('CORVUS_BUILD_MODULAR')
   add_defines('CORVUS_MODE_DEVELOPMENT', 'CORVUS_MODE="Development"')
 elseif is_mode('shipping') then
-  set_symbols('hidden')
+  set_symbols('debug')
   set_optimize('aggressive')
   set_strip('all')
   set_runtimes('MD')
@@ -62,8 +63,12 @@ rule('windows.default')
   end)
 
 function corvus_engine_target(name)
+  local config_dir = '$(builddir)/Config/' .. name;
+
   target(name)
     set_group('Engine')
+    set_configdir(config_dir)
+
     if is_mode('debug') then
       set_kind('shared')
     elseif is_mode('development') then
@@ -74,9 +79,10 @@ function corvus_engine_target(name)
 
     add_rules('windows.default')
     add_files('./Private/**.cpp')
-    add_headerfiles('./Public/**.hpp')
+    add_headerfiles('./Public/**.hpp', './Public/**.hpp.in')
     add_includedirs('./Private')
     add_includedirs('./Public', { public = true })
+    add_includedirs(config_dir, { public = true })
     add_forceincludes(name .. '/' .. name .. 'API.hpp', { public = true })
 
     add_defines('CORVUS_BUILD_' .. string.upper(name))
