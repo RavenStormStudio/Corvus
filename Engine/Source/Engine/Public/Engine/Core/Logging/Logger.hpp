@@ -44,6 +44,9 @@ public:
 #define DECLARE_LOG_CHANNEL(Name, DefaultSeverity) \
     FLogChannel Log##Name## = { .ChannelName = #Name, .Severity = ELogSeverity::DefaultSeverity };
 
-#define CVLOG(Channel, Severity, Message, ...) FLogger::Log(Channel, ELogSeverity::Severity, Message, __VA_ARGS__)
+#define DEFINE_LOG_CHANNEL(Name, DefaultSeverity) \
+    DECLARE_LOG_CHANNEL(Name, DefaultSeverity);
+
+#define CVLOG(Channel, Severity, Message, ...) FLogger::Log(Channel, ELogSeverity::Severity, Message __VA_OPT__(,) __VA_ARGS__)
 
 ENGINE_API DEFINE_LOG_CHANNEL_EXTERN(Temp)
