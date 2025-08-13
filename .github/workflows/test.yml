@@ -24,17 +24,11 @@ jobs:
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: 3.0.1
-      - name: Cache xmake dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            .xmake
-            ~/.xmake
-          key: xmake-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.config }}-${{ hashFiles('**/xmake.lua') }}
-          restore-keys: |
-            xmake-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.config }}-
-            xmake-${{ runner.os }}-${{ matrix.arch }}-
-            xmake-${{ runner.os }}-
+          actions-cache-folder: ".xmake"
+          actions-cache-key: "xmake-windows-ci-cache"
+          package-cache: true
+          package-cache-key: "xmake-windows-ci-package-cache"
+          project-path: "Corvus"
       - name: Configure xmake
         run: |
           xmake f -p windows -a ${{ matrix.arch }} -m ${{ matrix.config }} --yes
