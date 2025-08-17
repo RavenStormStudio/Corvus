@@ -6,7 +6,7 @@
 #include "Engine/Core/CoreTypes.hpp"
 
 template <typename TRep, typename TPeriod>
-struct ENGINE_API TDuration
+struct TDuration
 {
 public:
     using FDurationType = std::chrono::duration<TRep, TPeriod>;
@@ -29,7 +29,7 @@ public:
 
     template <typename TOtherRep, typename TOtherPeriod>
     constexpr explicit TDuration(const TDuration<TOtherRep, TOtherPeriod>& InDuration) noexcept
-        : Duration(std::chrono::duration_cast<FDurationType>(InDuration.GetNative()))
+        : Duration(std::chrono::duration_cast<FDurationType>(InDuration.GetNativeDuration()))
     {
     }
 
@@ -78,7 +78,7 @@ public:
         TDuration<typename T::FRepType, typename T::FPeriodType>, T>
     {
         using FCommonDuration = std::chrono::duration<std::common_type_t<TRep, typename T::FRepType>>;
-        return TDurationBase<std::common_type_t<TRep, typename T::RepType>, std::ratio<1>>(std::chrono::duration_cast<FCommonDuration>(Duration + Other.GetNativeDuration()));
+        return TDuration<std::common_type_t<TRep, typename T::FRepType>, std::ratio<1>>(std::chrono::duration_cast<FCommonDuration>(Duration + Other.GetNativeDuration()));
     }
 
     template <typename T>
@@ -122,7 +122,7 @@ public:
         requires std::is_base_of_v<TDuration<typename T::FRepType, typename T::FPeriodType>, T>
     {
         Duration += std::chrono::duration_cast<FDurationType>(Other.GetNativeDuration());
-        return static_cast<auto&>(*this);
+        return static_cast<TDuration&>(*this);
     }
 
     template <typename T>
@@ -130,7 +130,7 @@ public:
         requires std::is_base_of_v<TDuration<typename T::FRepType, typename T::FPeriodType>, T>
     {
         Duration -= std::chrono::duration_cast<FDurationType>(Other.GetNativeDuration());
-        return static_cast<auto&>(*this);
+        return static_cast<TDuration&>(*this);
     }
 
     template <typename TScalar>
@@ -145,7 +145,7 @@ public:
         {
             Duration = FDurationType(static_cast<TRep>(Duration.count() * Scalar));
         }
-        return static_cast<auto&>(*this);
+        return static_cast<TDuration&>(*this);
     }
 
     template <typename TScalar>
@@ -160,11 +160,11 @@ public:
         {
             Duration = FDurationType(static_cast<TRep>(Duration.count() / Scalar));
         }
-        return static_cast<auto&>(*this);
+        return static_cast<TDuration&>(*this);
     }
 
     template <typename T>
-    [[nodiscard]] constexpr bool8 operator<=>(const T& Other) const noexcept
+    [[nodiscard]] constexpr auto operator<=>(const T& Other) const noexcept
         requires std::is_base_of_v<TDuration<typename T::FRepType, typename T::FPeriodType>, T>
     {
         return Duration <=> Other.GetNativeDuration();
@@ -212,7 +212,7 @@ concept CDuration = requires
     typename T::FDurationType;
 } && std::is_base_of_v<TDuration<typename T::FRepType, typename T::FPeriodType>, T>;
 
-class ENGINE_API FTimePoint final
+class FTimePoint final
 {
 public:
     using FClockType = std::chrono::high_resolution_clock;
@@ -275,26 +275,30 @@ public:
     template <CDuration TDuration>
     [[nodiscard]] constexpr FTimePoint operator+(const TDuration& InDuration) const noexcept
     {
-        return FTimePoint(TimePoint + InDuration.GetNativeDuration());
+        auto NativeDuration = std::chrono::duration_cast<FClockType::duration>(InDuration.GetNativeDuration());
+        return FTimePoint(TimePoint + NativeDuration);
     }
 
     template <CDuration TDuration>
     [[nodiscard]] constexpr FTimePoint operator-(const TDuration& InDuration) const noexcept
     {
-        return FTimePoint(TimePoint - InDuration.GetNativeDuration());
+        auto NativeDuration = std::chrono::duration_cast<FClockType::duration>(InDuration.GetNativeDuration());
+        return FTimePoint(TimePoint - NativeDuration);
     }
 
     template <CDuration TDuration>
     FTimePoint& operator+=(const TDuration& InDuration) noexcept
     {
-        TimePoint += InDuration.GetNativeDuration();
+        auto NativeDuration = std::chrono::duration_cast<FClockType::duration>(InDuration.GetNativeDuration());
+        TimePoint += NativeDuration;
         return *this;
     }
 
     template <CDuration TDuration>
     FTimePoint& operator-=(const TDuration& InDuration) noexcept
     {
-        TimePoint -= InDuration.GetNativeDuration();
+        auto NativeDuration = std::chrono::duration_cast<FClockType::duration>(InDuration.GetNativeDuration());
+        TimePoint -= NativeDuration;
         return *this;
     }
 
@@ -311,7 +315,8 @@ public:
     template <CDuration TDuration>
     [[nodiscard]] static constexpr FTimePoint FromDuration(const TDuration& Duration) noexcept
     {
-        return FTimePoint(FTimePointType(Duration.GetNativeDuration()));
+        auto NativeDuration = std::chrono::duration_cast<FClockType::duration>(Duration.GetNativeDuration());
+        return FTimePoint(FTimePointType(NativeDuration));
     }
 
 private:
