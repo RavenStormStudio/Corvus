@@ -4,6 +4,7 @@
 
 # XMake
 .xmake/
+build/
 Engine/Build/Output/
 
 # Build Output
