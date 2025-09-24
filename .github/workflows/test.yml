@@ -23,7 +23,7 @@ jobs:
       - name: Install xmake
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: 3.0.1
+          xmake-version: 3.0.3
           package-cache: true
           package-cache-key: "${{ matrix.config }}-${{ matrix.arch }}-cache"
           project-path: "."
