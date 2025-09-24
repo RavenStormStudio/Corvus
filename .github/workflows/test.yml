@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config: [debug, development, shipping]
+        arch: [x64]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup MSVC
+        uses: microsoft/setup-msbuild@v2
+      - name: Install xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: 3.0.1
+          package-cache: true
+          package-cache-key: "${{ matrix.config }}-${{ matrix.arch }}-cache"
+          project-path: "."
+      - name: Configure xmake
+        run: |
+          xmake f -p windows -a ${{ matrix.arch }} -m ${{ matrix.config }} --yes
+      - name: Install Dependencies
+        run: xmake require --yes
+      - name: Build Solution
+        run: xmake build
+# TODO: Implement running of tests
