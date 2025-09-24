@@ -1,0 +1,11 @@
+# IDE specific
+.vscode/
+.idea/
+
+# XMake
+.xmake/
+Engine/Build/Output/
+
+# Build Output
+Binaries/
+Intermediates/
