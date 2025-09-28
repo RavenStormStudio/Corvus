@@ -16,6 +16,10 @@ private:
     static constexpr size64 GrowthFactor = 2;
 
 public:
+    using ValueType = TElement;
+    using Iterator = TElement*;
+
+public:
     constexpr TArray() = default;
 
     explicit TArray(const size64 InCount) requires std::is_trivially_constructible_v<TElement>
@@ -363,7 +367,7 @@ public:
     }
 
 public:
-    // TElement* support
+    // Iterator Support
     [[nodiscard]] TElement* begin() noexcept
     {
         return Data;
