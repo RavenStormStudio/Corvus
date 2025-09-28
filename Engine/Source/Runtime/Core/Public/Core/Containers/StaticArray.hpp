@@ -4,7 +4,6 @@
 
 #include <cassert>
 #include <compare>
-#include <concepts>
 #include <initializer_list>
 #include <type_traits>
 
@@ -13,6 +12,10 @@
 template <typename TElement, size64 TSize> requires std::is_object_v<TElement> && !std::is_abstract_v<TElement> && std::is_trivially_constructible_v<TElement> && (TSize > 0)
 class TStaticArray
 {
+public:
+    using ValueType = TElement;
+    using Iterator = TElement*;
+
 public:
     constexpr TStaticArray()
         : Data()
@@ -30,9 +33,12 @@ public:
     constexpr explicit TStaticArray(std::initializer_list<TElement> InInitializerList)
     {
         const size64 Count = InInitializerList.size() < TSize ? InInitializerList.size() : TSize;
+
+        const TElement* ListIterator = InInitializerList.begin();
         for (size64 Index = 0; Index < Count; ++Index)
         {
-            Data[Index] = InInitializerList[Index];
+            Data[Index] = *ListIterator;
+            ++ListIterator;
         }
     }
 
@@ -239,82 +245,6 @@ public:
         {
             Data[Index] = Value;
         }
-    }
-
-    [[nodiscard]] constexpr size64 Find(const TElement& Item) const requires CEqualityComparable<TElement>
-    {
-        for (size64 Index = 0; Index < TSize; ++Index)
-        {
-            if (Data[Index] == Item)
-            {
-                return Index;
-            }
-        }
-        return std::numeric_limits<size64>::max();
-    }
-
-    [[nodiscard]] constexpr bool8 Contains(const TElement& Item) const requires CEqualityComparable<TElement>
-    {
-        return Find(Item) != std::numeric_limits<size64>::max();
-    }
-
-public:
-    template <std::invocable<TElement&> TFunc>
-    constexpr void ForEach(TFunc&& Function)
-    {
-        for (size64 Index = 0; Index < TSize; ++Index)
-        {
-            std::invoke(std::forward<TFunc>(Function), Data[Index]);
-        }
-    }
-
-    template <std::invocable<const TElement&> TFunc>
-    constexpr void ForEach(TFunc&& Function) const
-    {
-        for (size64 Index = 0; Index < TSize; ++Index)
-        {
-            std::invoke(std::forward<TFunc>(Function), Data[Index]);
-        }
-    }
-
-    template <std::predicate<const TElement&> TPredicate>
-    [[nodiscard]] constexpr bool8 AllOf(TPredicate&& Predicate) const
-    {
-        for (size64 Index = 0; Index < TSize; ++Index)
-        {
-            if (!std::invoke(std::forward<TPredicate>(Predicate), Data[Index]))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    template <std::predicate<const TElement&> TPredicate>
-    [[nodiscard]] constexpr bool8 AnyOf(TPredicate&& Predicate) const
-    {
-        for (size64 Index = 0; Index < TSize; ++Index)
-        {
-            if (std::invoke(std::forward<TPredicate>(Predicate), Data[Index]))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    template <std::predicate<const TElement&> TPredicate>
-    [[nodiscard]] constexpr size64 CountIf(TPredicate&& Predicate) const
-    {
-        size64 Count = 0;
-        for (size64 Index = 0; Index < TSize; ++Index)
-        {
-            if (std::invoke(std::forward<TPredicate>(Predicate), Data[Index]))
-            {
-                ++Count;
-            }
-        }
-        return Count;
     }
 
 public:
