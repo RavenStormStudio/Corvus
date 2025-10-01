@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  build:
     name: Build and Test
     runs-on: windows-latest
     strategy:
@@ -34,4 +34,43 @@ jobs:
         run: xmake require --yes
       - name: Build Solution
         run: xmake build
-# TODO: Implement running of tests
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.config }}-${{ matrix.arch }}
+          path: |
+            Binaries/Engine/windows-${{ matrix.arch }}/${{ matrix.config }}/
+          retention-days: 1
+
+  test:
+    name: Run Tests
+    needs: build
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config: [debug, development, shipping]
+        arch: [x64]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup MSVC
+        uses: microsoft/setup-msbuild@v2
+      - name: Install xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: 3.0.3
+          package-cache: true
+          package-cache-key: "${{ matrix.config }}-${{ matrix.arch }}-cache"
+          project-path: "."
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-${{ matrix.config }}-${{ matrix.arch }}
+          path: Binaries/Engine/windows-${{ matrix.arch }}/${{ matrix.config }}/
+      - name: Configure xmake
+        run: |
+          xmake f -p windows -a ${{ matrix.arch }} -m ${{ matrix.config }} --yes
+      - name: Run Core Tests
+        run: xmake run CoreTests
