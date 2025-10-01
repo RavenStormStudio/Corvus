@@ -149,7 +149,7 @@ public:
         const size64 MinSize = Size < Other.Size ? Size : Other.Size;
         for (size64 Index = 0; Index < MinSize; ++Index)
         {
-            if (bool8 Result = Data[Index] <=> Other.Data[Index]; Result != 0)
+            if (auto Result = Data[Index] <=> Other.Data[Index]; Result != 0)
             {
                 return Result;
             }

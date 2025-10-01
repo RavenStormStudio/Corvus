@@ -25,6 +25,7 @@ build_cxx_dialect = 'cxx20'
 
 -- Dependencies
 add_requires('mimalloc 3.1.5')
+add_requires('catch2 3.10.0')
 
 -- Includes
 includes('Engine/Build/options.lua')

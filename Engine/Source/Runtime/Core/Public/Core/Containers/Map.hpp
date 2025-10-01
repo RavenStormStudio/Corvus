@@ -123,7 +123,7 @@ private:
             return CurrentNode <=> Other.CurrentNode;
         }
 
-    private:
+    public:
         TNodePointer CurrentNode;
         FNode** Buckets;
         size64 BucketCount;

@@ -23,6 +23,7 @@ public:
     }
 
     constexpr explicit TStaticArray(const TElement& InInitialValue)
+        : Data()
     {
         for (size64 Index = 0; Index < TSize; ++Index)
         {
@@ -31,6 +32,7 @@ public:
     }
 
     constexpr explicit TStaticArray(std::initializer_list<TElement> InInitializerList)
+        : Data()
     {
         const size64 Count = InInitializerList.size() < TSize ? InInitializerList.size() : TSize;
 

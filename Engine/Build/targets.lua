@@ -87,6 +87,20 @@ function corvus_program_target(name)
     add_includedirs('./Public/')
 end
 
+function corvus_test_target(name)
+  corvus_base_target(name .. 'Tests')
+    set_group('Tests')
+    set_kind('binary')
+    
+    if is_plat('windows') then
+      add_ldflags('/SUBSYSTEM:CONSOLE', { force = true })
+      add_rules('corvus.windows.default')
+    end
+
+    add_files('./Tests/**.cpp')
+    add_packages('catch2')
+end
+
 function corvus_target_end()
   target_end()
 end
