@@ -2,7 +2,12 @@ name: Tests
 
 on:
   pull_request:
-    branches: [main, develop]
+    branches:
+      - main
+      - develop
+      - epic/*
+      - feature/*
+      - fix/*
   workflow_dispatch:
 
 jobs:
