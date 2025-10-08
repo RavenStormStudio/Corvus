@@ -2,12 +2,13 @@
 
 #pragma once
 
+#include "ExceptionHandler.hpp"
+
 #include "Core/Containers/String.hpp"
 #include "Core/Logging/LogChannel.hpp"
 #include "Core/Utility/SourceLocation.hpp"
 #include "Core/Utility/StringUtils.hpp"
 
-struct FExceptionMetadata;
 CORE_API DECLARE_LOG_CHANNEL_EXTERN(Assert)
 
 namespace Assertion
