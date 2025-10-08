@@ -6,6 +6,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+DEFINE_LOG_CHANNEL(Temp, All)
+
 static constexpr const FAnsiChar* LoggerPattern = "%^[%T] [%t] [%-23!n] %8l:%$ %v";
 
 void FLogManager::Initialize()
