@@ -12,6 +12,11 @@ DEFINE_LOG_CHANNEL(Platform, All)
 
 FSystemInfo FPlatform::SystemInfo = {};
 
+bool8 FDynamicModuleHandle::IsValid() const noexcept
+{
+    return Module != nullptr;
+}
+
 void FPlatform::Initialize()
 {
     DetectOperatingSystem();
@@ -54,6 +59,30 @@ FString FPlatform::GetEnvVariable(const FString& VariableName, const FString& De
 bool8 FPlatform::SetEnvVariable(const FString& VariableName, const FString& Value) noexcept
 {
     return SetEnvironmentVariable(VariableName.c_str(), Value.c_str()) != 0;
+}
+
+FDynamicModuleHandle FPlatform::LoadDynamicModule(const FString& Name) noexcept
+{
+    const HMODULE Module = LoadLibrary(Name.c_str());
+    if (Module == nullptr)
+    {
+        CVLOG(LogPlatform, Error, "Failed to load module: {}", Name);
+        return {};
+    }
+    return {.Module = Module};
+}
+
+void FPlatform::UnloadDynamicModule(FDynamicModuleHandle&& Module) noexcept
+{
+    if (!Module.IsValid())
+    {
+        CVLOG(LogPlatform, Warning, "Attempting to unload invalid module");
+        return;
+    }
+    if (!FreeLibrary(std::move(Module).Module))
+    {
+        CVLOG(LogPlatform, Error, "Failed to unload module");
+    }
 }
 
 FCPUInfo FPlatform::GetCPUInfo() noexcept
