@@ -2,11 +2,10 @@
 
 #pragma once
 
-#include <Windows.h>
-
 #include "Core/CoreDefinitions.hpp"
 #include "Core/Containers/Array.hpp"
 #include "Core/Containers/String.hpp"
+#include "Core/Utility/WindowsDefinitions.hpp"
 
 enum class PLATFORM_API ERegistryHive : uint32
 {
@@ -20,13 +19,13 @@ enum class PLATFORM_API ERegistryHive : uint32
 
 enum class PLATFORM_API ERegistryValueType : uint8
 {
-    None = REG_NONE,
-    String = REG_SZ,
-    ExpandString = REG_EXPAND_SZ,
-    Binary = REG_BINARY,
-    DWord = REG_DWORD,
-    QWord = REG_QWORD,
-    MultiString = REG_MULTI_SZ,
+    None = 0ul,
+    String = 1ul,
+    ExpandString = 2ul,
+    Binary = 3ul,
+    DWord = 4ul,
+    QWord = 11ul,
+    MultiString = 7ul,
 };
 
 struct PLATFORM_API FRegistryValue
@@ -91,12 +90,12 @@ public:
     [[nodiscard]] FString GetSubKey() const { return SubKey; }
 
 private:
-    [[nodiscard]] HKEY GetHiveHandle() const;
+    [[nodiscard]] Windows::HKEY GetHiveHandle() const;
 
 private:
     ERegistryHive Hive = ERegistryHive::Unknown;
     FString SubKey;
-    HKEY KeyHandle = nullptr;
+    Windows::HKEY KeyHandle = nullptr;
     bool8 IsOpen = false;
 };
 
