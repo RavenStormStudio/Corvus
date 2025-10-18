@@ -20,6 +20,7 @@ namespace Windows
     using HWND = HWND__*;
     using HMONITOR = HMONITOR__*;
     using RECT = tagRECT;
+    using HMODULE = HINSTANCE;
 
     using EXCEPTION_POINTERS = _EXCEPTION_POINTERS;
 
