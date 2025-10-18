@@ -38,3 +38,13 @@ using FStringView = FWideStringView;
 template <typename... TArguments>
 using TFormatString = TWideFormatString<TArguments...>;
 #endif
+
+#ifndef TEXT
+#   if CV_USE_ANSI_STRINGS
+#       define INNER_TEXT(String) String
+#       define TEXT(String) INNER_TEXT(String)
+#   else
+#       define INNER_TEXT(String) L##String
+#       define TEXT(String) INNER_TEXT(String)
+#   endif
+#endif

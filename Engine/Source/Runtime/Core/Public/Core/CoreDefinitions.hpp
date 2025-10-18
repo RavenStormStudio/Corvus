@@ -50,8 +50,8 @@
     DEFAULT_MOVEABLE_PREFIX(Class,)
 
 #define DEFAULT_COPY_MOVEABLE_PREFIX(Class, Prefix) \
-    DEFAULT_COPYABLE(Class, Prefix) \
-    DEFAULT_MOVEABLE(Class, Prefix)
+    DEFAULT_COPYABLE_PREFIX(Class, Prefix) \
+    DEFAULT_MOVEABLE_PREFIX(Class, Prefix)
 
 #define INNER_APPEND(X, Y) X##Y
 #define APPEND(X, Y) INNER_APPEND(X, Y)
