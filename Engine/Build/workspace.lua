@@ -17,6 +17,7 @@ function coruvs_global_setup()
   -- Global Configuration
   set_targetdir('$(projectdir)/Binaries/Engine/$(plat)-$(arch)/$(mode)')
   set_objectdir('$(projectdir)/Intermediates/Engine/$(plat)-$(arch)/$(mode)')
+  set_dependir('$(projectdir)/Engine/Build/Output/.deps')
 
   set_warnings('error')
   set_exceptions('none')
@@ -46,7 +47,7 @@ function coruvs_global_setup()
 
   -- Platform Configuration
   if is_plat('windows') then
-    add_cxflags('/EHsc', '/Zc:preprocessor', '/wd5103', {force = true})
+    add_cxflags('/EHsc', '/Zc:preprocessor', '/wd5103', '/wd4005', {force = true})
     add_defines('WIN32_LEAN_AND_MEAN', 'NOMINMAX', 'WIN32_DEFAULT_LIBS')
   end
 end

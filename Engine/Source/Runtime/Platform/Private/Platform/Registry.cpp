@@ -5,6 +5,8 @@
 #include "Core/Assertion/Assertion.hpp"
 #include "Core/Logging/LogManager.hpp"
 
+#include <Windows.h>
+
 DEFINE_LOG_CHANNEL(Registry, All)
 
 namespace
